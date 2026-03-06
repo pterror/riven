@@ -14,3 +14,4 @@ docs/.vitepress/dist/
 .idea/
 .vscode/
 *.swp
+.envrc.local
