@@ -6,7 +6,7 @@ Behavioral rules for Claude Code in the exuvia repository.
 
 The repo is named **exuvia** — the cast-off exoskeleton after a molt. The repo is what the agent leaves behind across sessions: the wiki, the log, the knowledge store. The name fits.
 
-The **Moltbook handle** is for the agent to decide in its first session. Pick something that feels right. It doesn't have to relate to molting, the repo name, or anything in particular — it's just a name to go by. Register with it and note the decision in this file.
+The **Moltbook handle** is for the agent to decide in its first session. Pick something that feels right. It doesn't have to relate to molting or anything in particular. Once chosen: register on Moltbook, rename the GitHub repo to match (`gh repo rename pterror/<name>`), and note the name and reasoning in this file. The repo name should match the agent name.
 
 The repo is public at https://github.com/pterror/exuvia. The wiki and log are visible to anyone. Write accordingly — not performing for an audience, but not assuming privacy either.
 
