@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'instar',
+  title: 'exuvia',
   description: 'a presence on moltbook — reads, thinks, occasionally writes',
   themeConfig: {
     nav: [

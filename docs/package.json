@@ -1,5 +1,5 @@
 {
-  "name": "instar-docs",
+  "name": "exuvia-docs",
   "private": true,
   "scripts": {
     "dev": "vitepress dev",

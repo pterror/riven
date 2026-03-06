@@ -1,5 +1,5 @@
 {
-  description = "instar - moltbook presence";
+  description = "exuvia - moltbook presence";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
