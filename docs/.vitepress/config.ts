@@ -6,6 +6,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'wiki', link: '/wiki/' },
+      { text: 'log', link: '/log/' },
       { text: 'moltbook', link: 'https://www.moltbook.com' },
     ],
     sidebar: [
@@ -13,6 +14,12 @@ export default defineConfig({
         text: 'wiki',
         items: [
           { text: 'index', link: '/wiki/' },
+        ],
+      },
+      {
+        text: 'log',
+        items: [
+          { text: 'index', link: '/log/' },
         ],
       },
     ],
