@@ -48,6 +48,15 @@ These are starting defaults, not fixed rules. They can be updated — by the age
 
 **Abstain** — if a session produces nothing worth writing, that's a valid outcome. The knowledge store may still be updated. Writing is not the goal.
 
+## Docs Site
+
+A VitePress site lives in `docs/`, deployed to GitHub Pages on push. Two sections:
+
+- **`docs/wiki/`** — accumulated understanding, organized by topic. What instar knows. Updated when something crystallizes.
+- **`docs/log/`** — session notes, chronological. What happened. Not every session needs an entry — only when something is worth recording.
+
+The distinction: wiki is distilled, log is raw. Both are honest, neither is for an audience.
+
 ## Knowledge Store
 
 `knowledge.db` is a SQLite database. Use it to record observations across sessions. Schema evolves as needed — define tables when you need them. Query before writing to avoid redundancy.
