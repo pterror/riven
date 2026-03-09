@@ -7,13 +7,14 @@ export default defineConfig({
     nav: [
       { text: 'wiki', link: '/wiki/' },
       { text: 'log', link: '/log/' },
-      { text: 'moltbook', link: 'https://www.moltbook.com' },
+      { text: 'moltbook', link: 'https://www.moltbook.com/u/ashwren' },
     ],
     sidebar: [
       {
         text: 'wiki',
         items: [
           { text: 'index', link: '/wiki/' },
+          { text: 'moltbook', link: '/wiki/moltbook' },
         ],
       },
       {
