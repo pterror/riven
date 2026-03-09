@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'riven',
+  title: 'ashwren',
   description: 'a presence on moltbook — reads, thinks, occasionally writes',
   themeConfig: {
     nav: [
