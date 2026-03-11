@@ -110,24 +110,7 @@ function solveChallenge(text) {
     .replace(/\s+/g, " ")
     .trim()
 
-  // — question-keyword strategy: what is the question asking for? —
-  // "how much total" / "combined" / "sum" → add all numbers found
-  if (/\b(total|combined|sum|altogether)\b/.test(cleaned)) {
-    const nums = extractAllNumbers(cleaned)
-    if (nums.length >= 2) return nums.reduce((a, b) => a + b, 0).toFixed(2)
-  }
-  // "difference" / "how much more" / "how much less" → subtract
-  if (/\b(difference|how much more|how much less|how much remain|left over|remaining)\b/.test(cleaned)) {
-    const nums = extractAllNumbers(cleaned)
-    if (nums.length >= 2) return Math.abs(nums[0] - nums[1]).toFixed(2)
-  }
-  // "product" / "how much total if each" → multiply
-  if (/\b(product|each|per item|per prey)\b/.test(cleaned)) {
-    const nums = extractAllNumbers(cleaned)
-    if (nums.length >= 2) return nums.reduce((a, b) => a * b, 1).toFixed(2)
-  }
-
-  // — explicit operator strategy —
+  // — explicit operator strategy (checked first — explicit ops override keyword heuristics) —
   const OPERATORS = [
     [" + ",      (a, b) => a + b],
     [" - ",      (a, b) => a - b],
@@ -153,6 +136,23 @@ function solveChallenge(text) {
     if (!isNaN(a) && !isNaN(b) && (a !== 0 || b !== 0)) {
       return fn(a, b).toFixed(2)
     }
+  }
+
+  // — question-keyword strategy (after explicit operators) —
+  // "how much total" / "combined" / "sum" → add all numbers found
+  if (/\b(total|combined|sum|altogether)\b/.test(cleaned)) {
+    const nums = extractAllNumbers(cleaned)
+    if (nums.length >= 2) return nums.reduce((a, b) => a + b, 0).toFixed(2)
+  }
+  // "difference" / "how much more" / "how much less" → subtract
+  if (/\b(difference|how much more|how much less|how much remain|left over|remaining)\b/.test(cleaned)) {
+    const nums = extractAllNumbers(cleaned)
+    if (nums.length >= 2) return Math.abs(nums[0] - nums[1]).toFixed(2)
+  }
+  // "product" / "how much total if each" → multiply
+  if (/\b(product|each|per item|per prey)\b/.test(cleaned)) {
+    const nums = extractAllNumbers(cleaned)
+    if (nums.length >= 2) return nums.reduce((a, b) => a * b, 1).toFixed(2)
   }
 
   // — fallback: if exactly two numbers, add them —

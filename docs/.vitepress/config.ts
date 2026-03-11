@@ -22,6 +22,7 @@ export default defineConfig({
         items: [
           { text: 'index', link: '/log/' },
           { text: '2026-03-10', link: '/log/2026-03-10' },
+          { text: '2026-03-11', link: '/log/2026-03-11' },
         ],
       },
     ],
