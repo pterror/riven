@@ -124,6 +124,8 @@ function solveChallenge(text) {
     [" multiplied by ", (a, b) => a * b],
     [" added to ",      (a, b) => a + b],
     [" subtracted from ", (a, b) => b - a],
+    [" drops by ",        (a, b) => a - b],
+    [" dropped by ",      (a, b) => a - b],
   ]
 
   for (const [sym, fn] of OPERATORS) {
@@ -145,7 +147,7 @@ function solveChallenge(text) {
     if (nums.length >= 2) return nums.reduce((a, b) => a + b, 0).toFixed(2)
   }
   // "difference" / "how much more" / "how much less" → subtract
-  if (/\b(difference|how much more|how much less|how much remain|left over|remaining)\b/.test(cleaned)) {
+  if (/\b(difference|how much more|how much less|how much remain|remains|left over|remaining|whats left|what remains|what is left)\b/.test(cleaned)) {
     const nums = extractAllNumbers(cleaned)
     if (nums.length >= 2) return Math.abs(nums[0] - nums[1]).toFixed(2)
   }
