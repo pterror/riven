@@ -306,6 +306,21 @@ function extractAllNumbers(text) {
           j++; found = true; wordMatched = true; break
         }
       }
+      // if single token didn't match, try joining with next token (handles split words like "thir tyy" → "thirtyy" = thirty)
+      if (!wordMatched && j + 1 < tokens.length) {
+        const nextTok = tokens[j + 1].replace(/[^a-z]/g, "")
+        const combinedTok = tok + nextTok
+        for (const word of wordsSorted) {
+          const pattern = new RegExp("^" + soupPattern(word).source + "$")
+          if (pattern.test(combinedTok) && !SOUP_STOP_WORDS.has(combinedTok)) {
+            const val = NUMBER_WORDS[word]
+            if (val === 1000 || val === 1000000) { current = current || 1; total += current * val; current = 0 }
+            else if (val === 100) { current = (current || 1) * 100 }
+            else { current += val }
+            j += 2; found = true; wordMatched = true; break
+          }
+        }
+      }
       if (!wordMatched) break
     }
     if (found) {
