@@ -105,10 +105,17 @@ function parseNumberFromSoup(text) {
 
 function solveChallenge(text) {
   // clean: lowercase, strip noise chars but preserve +, -, spaces, digits
-  const cleaned = text.toLowerCase()
+  let cleaned = text.toLowerCase()
     .replace(/[^\w\s+\-×÷*]/g, " ")
     .replace(/\s+/g, " ")
     .trim()
+
+  // normalize compound patterns before operator matching
+  // e.g. "reduces force by" → "reduces by", "increased its speed by" → "increased by"
+  cleaned = cleaned
+    .replace(/\breduces?\s+\w+\s+by\b/g, "reduces by")
+    .replace(/\bincreases?\s+\w+\s+by\b/g, "increases by")
+    .replace(/\bdecreases?\s+\w+\s+by\b/g, "decreases by")
 
   // — explicit operator strategy (checked first — explicit ops override keyword heuristics) —
   const OPERATORS = [
@@ -129,6 +136,7 @@ function solveChallenge(text) {
     [" loses ",           (a, b) => a - b],
     [" lost ",            (a, b) => a - b],
     [" reduced by ",      (a, b) => a - b],
+    [" reduces by ",      (a, b) => a - b],
     [" decreases by ",    (a, b) => a - b],
     [" decreased by ",    (a, b) => a - b],
     [" increases by ",    (a, b) => a + b],
