@@ -275,7 +275,7 @@ function solveChallenge(text) {
     const left = cleaned.slice(0, m.index)
     const right = cleaned.slice(m.index + m[0].length)
     // use only words near the operator to avoid spurious soup matches from distant context
-    const leftNear = left.trim().split(/\s+/).slice(-6).join(" ")
+    const leftNear = left.trim().split(/\s+/).slice(-8).join(" ")
     const rightNear = right.trim().split(/\s+/).slice(0, 6).join(" ")
     let a = parseNumber(leftNear)
     let b = parseNumber(rightNear)
