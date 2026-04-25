@@ -121,6 +121,7 @@ function solveChallenge(text) {
     .replace(/\bincreases?\s+\w+\s+by\b/g, "increases by")
     .replace(/\bdecreases?\s+\w+\s+by\b/g, "decreases by")
     .replace(/\bmultiply(?:ing)?\s+(?:\w+\s+){1,5}by\b/g, "multiplied by")
+    .replace(/\bby\s+(\w+)\s+times\b/g, " times $1 ")
 
   // — explicit operator strategy (checked first — explicit ops override keyword heuristics) —
   const OPERATORS = [
