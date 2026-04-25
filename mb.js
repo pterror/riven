@@ -67,8 +67,20 @@ function parseNumber(text) {
   return parseNumberFromSoup(trimmed)
 }
 
+// common English words that look like number words under skip-matching but aren't numbers
+// "then" matches "ten" (t+skip_h+e+n), "there"/"these" match "three", etc.
+const SOUP_STOP_WORDS = new Set(["then", "there", "these", "their", "those"])
+
+// build a soup-tolerant regex for a word: collapses consecutive same letters, then each
+// letter matches 1+ times with an optional single-char skip between adjacent letter groups.
+// handles both doubled letters ("sevveen") and inserted noise chars ("thweenty" for "twenty")
+function soupPattern(word) {
+  const collapsed = word.replace(/(.)\1+/g, "$1")
+  return new RegExp(collapsed.split("").map((c, i) => i === 0 ? `${c}+` : `[a-z]?${c}+`).join(""))
+}
+
 // match number words in obfuscated text by collapsing to letter soup
-// allows each letter to appear 1+ times consecutively (handles duplication)
+// allows each letter to appear 1+ times and allows 1 inserted noise char between letters
 function parseNumberFromSoup(text) {
   const soup = text.toLowerCase().replace(/[^a-z]/g, "")
   if (!soup) return NaN
@@ -82,10 +94,9 @@ function parseNumberFromSoup(text) {
   while (remaining.length > 0) {
     let matched = false
     for (const word of wordsSorted) {
-      // regex: each letter in the word can appear 1+ times
-      const pattern = new RegExp(word.split("").map(c => `${c}+`).join(""))
+      const pattern = soupPattern(word)
       const m = remaining.match(pattern)
-      if (m && m.index === 0) {
+      if (m && m.index === 0 && !SOUP_STOP_WORDS.has(m[0])) {
         found.push(NUMBER_WORDS[word])
         remaining = remaining.slice(m[0].length)
         matched = true
@@ -189,11 +200,22 @@ function solveChallenge(text) {
   }
 
   // — explicit operator strategy (after total/sum keyword path) —
+  // use soup-tolerant regex for operators: handles doubled/inserted letters in obfuscated verbs
   for (const [sym, fn] of OPERATORS) {
-    const idx = cleaned.indexOf(sym)
-    if (idx === -1) continue
-    const left = cleaned.slice(0, idx)
-    const right = cleaned.slice(idx + sym.length)
+    // build regex: spaces → \s+, letter sequences → soup pattern, other chars → escaped literal
+    let reStr = ""
+    let i = 0
+    while (i < sym.length) {
+      if (/\s/.test(sym[i])) { while (i < sym.length && /\s/.test(sym[i])) i++; reStr += "\\s+" }
+      else if (/[a-z]/i.test(sym[i])) {
+        let w = ""; while (i < sym.length && /[a-z]/i.test(sym[i])) { w += sym[i].toLowerCase(); i++ }
+        reStr += soupPattern(w).source
+      } else { reStr += sym[i].replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); i++ }
+    }
+    const m = cleaned.match(new RegExp(reStr))
+    if (!m) continue
+    const left = cleaned.slice(0, m.index)
+    const right = cleaned.slice(m.index + m[0].length)
     const a = parseNumber(left)
     const b = parseNumber(right)
     if (!isNaN(a) && !isNaN(b) && (a !== 0 || b !== 0)) {
@@ -241,10 +263,10 @@ function extractAllNumbers(text) {
     while (numPos < soup.length) {
       let wordMatched = false
       for (const word of wordsSorted) {
-        const pattern = new RegExp("^" + word.split("").map(c => `${c}+`).join(""))
+        const pattern = new RegExp("^" + soupPattern(word).source)
         const slice = soup.slice(numPos)
         const m = slice.match(pattern)
-        if (m) {
+        if (m && !SOUP_STOP_WORDS.has(m[0])) {
           const val = NUMBER_WORDS[word]
           if (val === 1000 || val === 1000000) { current = current || 1; total += current * val; current = 0 }
           else if (val === 100) { current = (current || 1) * 100 }
