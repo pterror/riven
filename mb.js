@@ -126,6 +126,15 @@ function solveChallenge(text) {
     [" subtracted from ", (a, b) => b - a],
     [" drops by ",        (a, b) => a - b],
     [" dropped by ",      (a, b) => a - b],
+    [" loses ",           (a, b) => a - b],
+    [" lost ",            (a, b) => a - b],
+    [" reduced by ",      (a, b) => a - b],
+    [" decreases by ",    (a, b) => a - b],
+    [" decreased by ",    (a, b) => a - b],
+    [" increases by ",    (a, b) => a + b],
+    [" increased by ",    (a, b) => a + b],
+    [" gained ",          (a, b) => a + b],
+    [" gains ",           (a, b) => a + b],
   ]
 
   for (const [sym, fn] of OPERATORS) {
