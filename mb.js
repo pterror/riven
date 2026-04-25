@@ -61,10 +61,14 @@ function parseNumber(text) {
     else if (val === 100) { current = (current || 1) * 100 }
     else { current += val }
   }
-  if (found) return total + current
-
-  // fallback: letter-soup matching (handles mid-word spaces + duplicate letters)
-  return parseNumberFromSoup(trimmed)
+  // always also try soup path — handles inserted spaces within number words
+  // e.g. "t hree" (split "three") which fast path misses; use larger result
+  const soupResult = parseNumberFromSoup(trimmed)
+  if (found) {
+    const fastResult = total + current
+    return (!isNaN(soupResult) && soupResult > fastResult) ? soupResult : fastResult
+  }
+  return soupResult
 }
 
 // common English words that look like number words under skip-matching but aren't numbers
