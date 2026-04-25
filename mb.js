@@ -139,6 +139,8 @@ function solveChallenge(text) {
     [" subtracted from ", (a, b) => b - a],
     [" drops by ",        (a, b) => a - b],
     [" dropped by ",      (a, b) => a - b],
+    [" slows by ",        (a, b) => a - b],
+    [" slowed by ",       (a, b) => a - b],
     [" loses ",           (a, b) => a - b],
     [" lost ",            (a, b) => a - b],
     [" reduced by ",      (a, b) => a - b],
