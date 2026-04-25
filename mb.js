@@ -256,9 +256,10 @@ function solveChallenge(text) {
     const measureNums = []
     let vm
     while ((vm = measureVerbRe.exec(cleaned)) !== null) {
-      // take next 5 words — avoids accumulating numbers from later clauses
+      // take next 8 words — avoids accumulating numbers from later clauses
+      // 8 words handles compound numbers like "twenty four" with intervening words (e.g. "a claw force of twenty four")
       // use extractAllNumbers (soup-based) to handle obfuscated number words
-      const nearby = cleaned.slice(vm.index + vm[0].length).trim().split(/\s+/).slice(0, 5).join(" ")
+      const nearby = cleaned.slice(vm.index + vm[0].length).trim().split(/\s+/).slice(0, 8).join(" ")
       const nearbyNums = extractAllNumbers(nearby)
       // use last number in context: obfuscated prefix noise (e.g. "tween ty" before "twenty five")
       // produces an extra number before the real value — last is the most fully-formed compound
