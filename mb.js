@@ -240,8 +240,14 @@ function solveChallenge(text) {
       const otherNums = allNums.filter(n => Math.abs(n - measureNums[0]) > 0.001)
       if (otherNums.length === 1) return (measureNums[0] * otherNums[0]).toFixed(2)
     }
-    // if exactly one measurement and "times N" or "multiplied by N" indicates a multiplier
+    // if exactly one measurement and explicit * operator or "times N" / "multiplied by N" indicates a multiplier
     if (measureNums.length === 1) {
+      // explicit " * N" or " × N" in text (e.g. "exerts 25 newtons * two claws")
+      const starMatch = cleaned.match(/ [*×]\s+(\w+)/)
+      if (starMatch) {
+        const factor = parseNumber(starMatch[1])
+        if (!isNaN(factor) && factor > 0) return (measureNums[0] * factor).toFixed(2)
+      }
       const mxMatch = cleaned.match(/\btimes\s+(\w+)/) || cleaned.match(/\bmultiplied\s+by\s+(\w+)/)
       if (mxMatch) {
         const factor = parseNumber(mxMatch[1])
