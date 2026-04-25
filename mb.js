@@ -122,6 +122,7 @@ function solveChallenge(text) {
     .replace(/\bdecreases?\s+\w+\s+by\b/g, "decreases by")
     .replace(/\bmultiply(?:ing)?\s+(?:\w+\s+){1,5}by\b/g, "multiplied by")
     .replace(/\bby\s+(\w+)\s+times\b/g, " times $1 ")
+    .replace(/\b(\w+)\s+\w+\s+strikes?\b/g, " times $1 ")
 
   // — explicit operator strategy (checked first — explicit ops override keyword heuristics) —
   const OPERATORS = [
@@ -170,14 +171,26 @@ function solveChallenge(text) {
   if (/\b(total|combined|sum|altogether)\b/.test(cleaned)) {
     // first try: extract numbers that appear right after measurement verbs
     // avoids counting "one claw" style count phrases as measurements
-    const measureVerbRe = /\b(?:exerts?|applies?|pushes?|pulls?|lifts?|throws?|carries?|produces?|generates?|measures?|weighs?|uses?|has|have|burns?|consumes?)\s+/gi
+    // soup-style verb patterns (e.g. "ex+er+ts?") handle obfuscation with repeated letters
+    const soupVerb = v => v.split("").map(c => c === "?" ? c : c + "+").join("")
+    const MEASURE_VERBS = ["exerts?","applies?","pushes?","pulls?","lifts?","throws?","carries?","produces?","generates?","measures?","weighs?","uses?","has","have","burns?","consumes?","adds?","contributes?"]
+    const measureVerbRe = new RegExp(`\\b(?:${MEASURE_VERBS.map(soupVerb).join("|")})\\s+`, "gi")
     const measureNums = []
     let vm
     while ((vm = measureVerbRe.exec(cleaned)) !== null) {
-      const n = parseNumber(cleaned.slice(vm.index + vm[0].length))
-      if (!isNaN(n) && n > 0) measureNums.push(n)
+      // take next 5 words — avoids accumulating numbers from later clauses
+      // use extractAllNumbers (soup-based) to handle obfuscated number words
+      const nearby = cleaned.slice(vm.index + vm[0].length).trim().split(/\s+/).slice(0, 5).join(" ")
+      const nearbyNums = extractAllNumbers(nearby)
+      if (nearbyNums.length > 0 && nearbyNums[0] > 0) measureNums.push(nearbyNums[0])
     }
     if (measureNums.length >= 2) return measureNums.reduce((a, b) => a + b, 0).toFixed(2)
+    // if exactly one measurement and "strikes" indicates count-of-events, multiply
+    if (measureNums.length === 1 && /\bstrikes?\b/.test(cleaned)) {
+      const allNums = extractAllNumbers(cleaned)
+      const otherNums = allNums.filter(n => Math.abs(n - measureNums[0]) > 0.001)
+      if (otherNums.length === 1) return (measureNums[0] * otherNums[0]).toFixed(2)
+    }
     // fallback: extract all numbers
     const nums = extractAllNumbers(cleaned)
     if (nums.length >= 2) return nums.reduce((a, b) => a + b, 0).toFixed(2)
