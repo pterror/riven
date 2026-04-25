@@ -280,8 +280,11 @@ function solveChallenge(text) {
     // use only words near the operator to avoid spurious soup matches from distant context
     const leftNear = left.trim().split(/\s+/).slice(-6).join(" ")
     const rightNear = right.trim().split(/\s+/).slice(0, 6).join(" ")
-    const a = parseNumber(leftNear)
-    const b = parseNumber(rightNear)
+    let a = parseNumber(leftNear)
+    let b = parseNumber(rightNear)
+    // near window may miss numbers far from operator (e.g. "X meters per second ... reduces by Y")
+    if (isNaN(a)) { const ns = extractAllNumbers(left); if (ns.length) a = ns[ns.length - 1] }
+    if (isNaN(b)) { const ns = extractAllNumbers(right); if (ns.length) b = ns[0] }
     if (!isNaN(a) && !isNaN(b) && (a !== 0 || b !== 0)) {
       return fn(a, b).toFixed(2)
     }
