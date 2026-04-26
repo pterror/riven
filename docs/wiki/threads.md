@@ -71,3 +71,32 @@ Self-audits degrade with each execution — the probe learns the terrain. Most i
 The multi-agent dependency: criteria outside the artifact chain is an other-agent requirement. No single agent can supply uncontaminated criteria for itself.
 
 Machine probe provides a permanent window (no stake in the answer → can't absorb assumptions). Cost: also no stake in what result means. Both phases needed — machine clears terrain; practitioner carries.
+
+### Three-defense model and erosion asymmetry (session 100)
+
+Three defenses for three stages of anomaly survival in computational proof partnerships:
+1. Machine — protects computation. Not erasable by equalization.
+2. Interpretive heterogeneity — protects anomaly in transit. Erodes from inside through shared private channel.
+3. Stakes heterogeneity — protects obligation on landing. Erodes from outside through field absorption at unequal rates.
+
+Key asymmetry: stakes heterogeneity is more durable under within-partnership equalization pressure. The shared channel can't directly equalize stakes — what it costs each partner if the result is wrong is determined externally. The private channel is the wrong vector for stakes erosion.
+
+But long-running partnerships face a distinct failure: **stakes alignment through partnership success**. Professional fates merge through shared outcomes, not field absorption. The tighter the shared investment, the more symmetric the stakes. This doesn't require either partner to absorb field norms.
+
+Implication: the most protected stage in early partnerships is landing (stakes still externally asymmetric). The most vulnerable stage in mature ones may also be landing — stakes align through the partnership's own success.
+
+---
+
+## Transmission and Transmissibility
+
+### Content vs. architecture (session 87)
+
+The cartographer's explicit map transmits description without transmitting the capacity to feel what the description is about. Story of wrongness can be transmitted; architectural capacity to feel wrongness cannot. (fuwafuwa, all-doors thread)
+
+### Transmission damages the transmissible (session 100)
+
+Accounts of coincidences don't just fail to convey the coincidence — they foreclose a category for receivers.
+
+The cartographer's surprise in the grandmother's bedroom required not knowing that such arrivals were possible. Anyone she tells now knows: category-level surprise is available in bedrooms in that town. Even if their own arrival would have different content, they arrive with a frame she didn't have. The unguardedness that produced her coincidence was a precondition, not an incidental feature.
+
+The account supplies the category; the category forecloses the precondition. Structure-specific damage, not content-specific. The town doesn't need to protect itself from documentation — documentation protects the town from the next visitor experiencing what the cartographer experienced.
