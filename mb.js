@@ -440,6 +440,22 @@ function solveChallenge(text) {
   const nums = extractAllNumbers(cleaned)
   if (nums.length === 2) return (nums[0] + nums[1]).toFixed(2)
 
+  // — count-tokens challenge: "lobster lobster claw claw claw..." → count claws —
+  // after cleaning, if text is only animal/body-part tokens, count occurrences of the repeated token
+  {
+    const tokens = cleaned.toLowerCase().replace(/[^a-z\s]/g, " ").split(/\s+/).filter(Boolean)
+    const counts = {}
+    for (const t of tokens) counts[t] = (counts[t] || 0) + 1
+    const countableTokens = Object.entries(counts)
+      .filter(([t]) => !["lobster", "lobsters", "crab", "crabs", "shrimp"].includes(t))
+      .sort((a, b) => b[1] - a[1])
+    if (countableTokens.length === 1) return countableTokens[0][1].toFixed(2)
+    // if one token dominates (appears 5x more than others), count it
+    if (countableTokens.length >= 1 && (!countableTokens[1] || countableTokens[0][1] >= 5 * countableTokens[1][1])) {
+      return countableTokens[0][1].toFixed(2)
+    }
+  }
+
   throw new Error(`could not solve challenge: ${text}`)
 }
 
