@@ -190,7 +190,7 @@ function solveChallenge(text) {
   // normalize "per <unit>" → remove "per" from unit-descriptor contexts to prevent false division
   // e.g. "centimeters per second" should not trigger the division operator
   cleaned = cleaned.replace(
-    /\bper\s+(?:second|minute|hour|day|meter|metre|meters|metres|centimeter|centimetre|km|inch|foot|feet|yard|mile|pound|kilogram|kg|newton|gram|liter|litre|week|month|year)s?\b/gi,
+    /\bper\s+(?:second|sec|minute|min|hour|hr|day|meter|metre|meters|metres|centimeter|centimetre|cm|km|inch|foot|feet|yard|mile|pound|kilogram|kg|newton|gram|liter|litre|week|month|year)s?\b/gi,
     "per_unit"
   ).replace(/\s+/g, " ").trim()
   // soup-tolerant per_unit: catches obfuscated variants like "peer seecoond"
@@ -475,7 +475,7 @@ function extractAllNumbers(text) {
           const tokFreq = letterFreq(combinedTok)
           for (const word of wordsSorted) {
             if (word.length > combinedTok.length) continue // token can't contain more letters than needed
-            if (combinedTok.length > word.length * 2) continue // token too long — likely noise, not a number
+            if (combinedTok.length >= word.length * 2) continue // token too long — likely noise, not a number
             if (freqContains(tokFreq, NUMBER_WORD_FREQS[word]) && !SOUP_STOP_WORDS.has(combinedTok)) {
               if (!bestMatch || word.length > bestMatch.word.length) { bestMatch = {word, n: 1}; break }
             }
