@@ -336,6 +336,9 @@ function solveChallenge(text) {
       }
     }
     if (nums.length >= 2) return nums.reduce((a, b) => a + b, 0).toFixed(2)
+    // single-number total: compound numbers like "thirty seven twelve" parse as one value (49);
+    // when a total question yields exactly one number, that IS the answer
+    if (nums.length === 1) return nums[0].toFixed(2)
   }
 
   // — explicit operator strategy (after total/sum keyword path) —
