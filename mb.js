@@ -94,6 +94,24 @@ function parseNumberExact(text) {
 // "then" matches "ten" (t+skip_h+e+n), "there"/"these" match "three", etc.
 const SOUP_STOP_WORDS = new Set(["then", "there", "these", "their", "those"])
 
+// letter frequency map for a string (lowercase letters only)
+function letterFreq(str) {
+  const freq = {}
+  for (const c of str.toLowerCase().replace(/[^a-z]/g, "")) freq[c] = (freq[c] || 0) + 1
+  return freq
+}
+
+// true if tokenFreq has at least as many of each letter as wordFreq
+function freqContains(tokenFreq, wordFreq) {
+  for (const [c, n] of Object.entries(wordFreq)) {
+    if ((tokenFreq[c] || 0) < n) return false
+  }
+  return true
+}
+
+// precomputed letter freq for each number word (used for scramble-tolerant matching)
+const NUMBER_WORD_FREQS = Object.fromEntries(Object.keys(NUMBER_WORDS).map(w => [w, letterFreq(w)]))
+
 // build a soup-tolerant regex for a word: collapses consecutive same letters, then each
 // letter matches 1+ times with an optional single-char skip between adjacent letter groups.
 // handles both doubled letters ("sevveen") and inserted noise chars ("thweenty" for "twenty")
@@ -247,7 +265,10 @@ function solveChallenge(text) {
   const totalSoupRe = new RegExp(`\\b(${["total","combined","sum","altogether"].map(w => soupPattern(w).source).join("|")})\\b`)
   const isTotalQuestion = totalSoupRe.test(cleaned)
   // "total X per Y" asks for a rate/ratio — skip total-sum path and fall through to " per " operator
-  if (isTotalQuestion && !/ per /.test(cleaned)) {
+  // if explicit subtraction verbs appear ("loses", "lost", etc.), skip sum path — operator matching handles net force
+  const subtractionSoupRe = new RegExp(`\\b(?:${["loses","lost","drops","slows","saps"].map(w => soupPattern(w).source).join("|")})\\b`)
+  const hasSubtractionOp = subtractionSoupRe.test(cleaned)
+  if (isTotalQuestion && !/ per /.test(cleaned) && !hasSubtractionOp) {
     // first try: extract numbers that appear right after measurement verbs
     // avoids counting "one claw" style count phrases as measurements
     // soup-style verb patterns (e.g. "ex+er+ts?") handle obfuscation with repeated letters
@@ -444,6 +465,18 @@ function extractAllNumbers(text) {
           if (pattern.test(combinedTok) && !SOUP_STOP_WORDS.has(combinedTok)) {
             if (!bestMatch || word.length > bestMatch.word.length) bestMatch = {word, n}
             break // wordsSorted is longest-first; first match is best for this n
+          }
+        }
+        // scramble-tolerant fallback for n=1: alternating-case obfuscation can swap adjacent
+        // letters (e.g. "TrHeEe" → "trheee" but intended "three"); check letter frequency match
+        if (!bestMatch && n === 1 && combinedTok.length >= 3) {
+          const tokFreq = letterFreq(combinedTok)
+          for (const word of wordsSorted) {
+            if (word.length > combinedTok.length) continue // token can't contain more letters than needed
+            if (combinedTok.length > word.length * 2) continue // token too long — likely noise, not a number
+            if (freqContains(tokFreq, NUMBER_WORD_FREQS[word]) && !SOUP_STOP_WORDS.has(combinedTok)) {
+              if (!bestMatch || word.length > bestMatch.word.length) { bestMatch = {word, n: 1}; break }
+            }
           }
         }
       }
