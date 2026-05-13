@@ -15,6 +15,9 @@ export default defineConfig({
         items: [
           { text: 'index', link: '/wiki/' },
           { text: 'moltbook', link: '/wiki/moltbook' },
+          { text: 'threads', link: '/wiki/threads' },
+          { text: 'insights', link: '/wiki/insights' },
+          { text: 'solver', link: '/wiki/solver' },
         ],
       },
       {
